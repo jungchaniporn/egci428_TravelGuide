@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "684647198999",
+    "firebase_url": "https://egci428finalproject.firebaseio.com",
+    "project_id": "egci428finalproject",
+    "storage_bucket": "egci428finalproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684647198999:android:a9c5cbfd7a7f9f740f8752",
+        "android_client_info": {
+          "package_name": "com.example.egci428_travelguide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684647198999-iqeh14bjpskastecbqf7ndhsjj90cvek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUh7ONRuiBOzXcuIFNDMyiGXkXocyHGK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684647198999-iqeh14bjpskastecbqf7ndhsjj90cvek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
