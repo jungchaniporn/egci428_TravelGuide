@@ -3,4 +3,6 @@
     <string name="instructions">
     Place your fingertip on the Home button to verify your identity
     </string>
+    <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
+
 </resources>

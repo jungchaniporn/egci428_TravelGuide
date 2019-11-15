@@ -21,6 +21,7 @@ class SignupActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
         submitSigupBtn.setOnClickListener {
+//            not store username yet
             var email = emailText.text.toString()
             var password = passwordText.text.toString()
             createAccount(email,password)
