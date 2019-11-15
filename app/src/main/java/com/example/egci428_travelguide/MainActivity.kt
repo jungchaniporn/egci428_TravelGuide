@@ -11,8 +11,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-    loginBtn.setOnClickListener {
+    fingerprintBtn.setOnClickListener {
         val intent = Intent(this,SigninActivity::class.java)
+        startActivity(intent)
+    }
+    signupBtn.setOnClickListener {
+        val intent = Intent(this,SignupActivity::class.java)
         startActivity(intent)
     }
     }
