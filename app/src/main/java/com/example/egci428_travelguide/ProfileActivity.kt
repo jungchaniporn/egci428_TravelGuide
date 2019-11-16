@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_signup.*
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,12 +23,33 @@ class ProfileActivity : AppCompatActivity() {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+
+        val currentUser = auth.currentUser
+        updateUI(currentUser)
     }
 
     private fun updateUI(user: FirebaseUser?) {
+        val Uid = user!!.uid
         if (user != null) {
-            MailText.setText(getString(R.string.emailpassword_status_fmt, user.email, user.isEmailVerified))
-//            id = getString(R.string.firebase_status_fmt, user.uid)
+            MailText.setText(user.email)
+            // Initialize Firebase DB
+            database = FirebaseDatabase.getInstance().getReference("Users/")
+            database.addValueEventListener(object: ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+                override fun onDataChange(p0: DataSnapshot) {
+                    if(p0!!.exists()){
+                        uNameText.text.clear()
+                        for (i in p0.children){
+                            val user = i.getValue(UserInfo::class.java)
+                            uNameText.setText(user!!.username.toString())
+                        }
+                    }
+                }
+
+            })
+
+
         }
     }
 

@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_signup.*
 class SignupActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
@@ -38,7 +37,6 @@ class SignupActivity : AppCompatActivity() {
                 .addOnCompleteListener {
                     Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
                 }
-
         }
     }
     public override fun onStart() {
