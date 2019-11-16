@@ -7,24 +7,38 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_signup.*
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-//        back button
+        // back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        // Initialize Firebase DB
+        database = FirebaseDatabase.getInstance().getReference("Users")
+
         submitSigupBtn.setOnClickListener {
-//            not store username yet
             var email = emailText.text.toString()
             var password = passwordText.text.toString()
+            var username = usernameText.text.toString()
             createAccount(email,password)
+            val Uid = auth.currentUser!!.uid
+        // keep data in firebase
+            database.child(Uid+"/username")
+                .setValue(username)
+                .addOnCompleteListener {
+                    Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
+                }
+
         }
     }
     public override fun onStart() {
