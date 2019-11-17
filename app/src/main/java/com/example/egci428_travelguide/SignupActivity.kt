@@ -28,15 +28,8 @@ class SignupActivity : AppCompatActivity() {
         submitSigupBtn.setOnClickListener {
             var email = emailText.text.toString()
             var password = passwordText.text.toString()
-            var username = usernameText.text.toString()
+
             createAccount(email,password)
-            val Uid = auth.currentUser!!.uid
-        // keep data in firebase
-            database.child(Uid+"/username")
-                .setValue(username)
-                .addOnCompleteListener {
-                    Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
-                }
         }
     }
     public override fun onStart() {
@@ -55,6 +48,12 @@ class SignupActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Authentication done.",
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
+                    //store extra information in database
+                    database.child(user!!.uid+"/username")
+                        .setValue(usernameText.text.toString()) //set username
+                        .addOnCompleteListener {
+                            Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
+                        }
                     usernameText.setText("")
                     emailText.setText("")
                     passwordText.setText("")

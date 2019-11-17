@@ -29,7 +29,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
-        val Uid = user!!.uid
+        //val Uid = user!!.uid
         if (user != null) {
             MailText.setText(user.email)
             // Initialize Firebase DB
@@ -38,11 +38,11 @@ class ProfileActivity : AppCompatActivity() {
                 override fun onCancelled(p0: DatabaseError) {
                 }
                 override fun onDataChange(p0: DataSnapshot) {
-                    if(p0!!.exists()){
+                    if(p0.exists()){
                         uNameText.text.clear()
                         for (i in p0.children){
-                            val user = i.getValue(UserInfo::class.java)
-                            uNameText.setText(user!!.username.toString())
+                            val user_ = i.getValue(UserInfo::class.java)
+                            uNameText.setText(user_!!.username.toString())
                         }
                     }
                 }
