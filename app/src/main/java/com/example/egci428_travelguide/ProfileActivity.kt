@@ -29,11 +29,11 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
-        //val Uid = user!!.uid
+        val Uid = user!!.uid
         if (user != null) {
             MailText.setText(user.email)
             // Initialize Firebase DB
-            database = FirebaseDatabase.getInstance().getReference("Users/")
+            database = FirebaseDatabase.getInstance().getReference("Users/"+Uid)
             database.addValueEventListener(object: ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                 }
@@ -41,8 +41,9 @@ class ProfileActivity : AppCompatActivity() {
                     if(p0.exists()){
                         uNameText.text.clear()
                         for (i in p0.children){
-                            val user_ = i.getValue(UserInfo::class.java)
-                            uNameText.setText(user_!!.username.toString())
+                            val user_ = i.getValue()
+                                uNameText.setText(user_.toString())
+
                         }
                     }
                 }
