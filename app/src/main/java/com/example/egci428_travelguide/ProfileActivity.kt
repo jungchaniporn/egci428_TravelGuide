@@ -1,7 +1,9 @@
 package com.example.egci428_travelguide
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -22,7 +24,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // back button
+        // action bar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -60,14 +62,25 @@ class ProfileActivity : AppCompatActivity() {
             })
         }
     }
+// for action bar
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        getMenuInflater().inflate(R.menu.menu_detail,menu)
 
-
+        return super.onCreateOptionsMenu(menu)
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.getItemId()
-//        get abck to home page
-        if(id == android.R.id.home){
+        if(id == R.id.profileItem){
+            val intent = Intent(this,ProfileActivity::class.java)
+            startActivity(intent)
+        }else if(id == R.id.signoutItem){
+            auth.signOut()
+            finish()
+        }else if(id == android.R.id.home){
             finish()
         }
+
         return super.onOptionsItemSelected(item)
     }
+
 }
