@@ -30,38 +30,10 @@ class SignupActivity : AppCompatActivity() {
         submitSigupBtn.setOnClickListener {
             var email = emailText.text.toString()
             var password = passwordText.text.toString()
-            var username = usernameText.text.toString()
-            createAccount(email,password)
-            Thread.sleep(1000)
-            signIn(email,password,username)
-        }
-    }
-    private fun signIn(email: String, password: String, username:String) {
-        // [START sign_in_with_email]
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("Main", "signInWithEmail:success")
-                    Toast.makeText(baseContext, "Authentication done.", Toast.LENGTH_SHORT).show()
-                    val user = auth.currentUser
-                    val Uid = user!!.uid
-                    // keep data in firebase
-                    database.child(Uid+"/username")
-                        .setValue(username)
-                        .addOnCompleteListener {
-                            Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
-                        }
-                    val intent = Intent(this,ProfileActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("Main", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                }
 
-            }
-        // [END sign_in_with_email]
+            createAccount(email,password)
+
+        }
     }
 
     public override fun onStart() {
@@ -80,6 +52,12 @@ class SignupActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Authentication done.",
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
+                    //store extra information in database
+                    database.child(user!!.uid+"/username")
+                        .setValue(usernameText.text.toString()) //set username
+                        .addOnCompleteListener {
+                            Toast.makeText(applicationContext, "Message saved successfully", Toast.LENGTH_SHORT).show()
+                        }
                     usernameText.setText("")
                     emailText.setText("")
                     passwordText.setText("")
