@@ -133,10 +133,8 @@ class SignupActivity : AppCompatActivity() {
         if (requestCode == PICK_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null){
             filePath = data.data
             try {
-                //val bitmap = BitmapFactory.decodeFile(filePath.toString())
-                //deprecated android P
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-//                show in imgView
+                // show in imgView
                 imageView!!.setImageBitmap(bitmap)
             } catch (e: IOException) {
                 e.printStackTrace()
