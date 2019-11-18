@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
                     val user = auth.currentUser
                     InEmailText.setText("")
                     InPasswordText.setText("")
-                    val intent = Intent(this,ProfileActivity::class.java)
+                    //val intent = Intent(this,ProfileActivity::class.java)
+                    val intent = Intent(this,MapActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
