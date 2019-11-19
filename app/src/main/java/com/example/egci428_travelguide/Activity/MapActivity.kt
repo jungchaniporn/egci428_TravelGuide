@@ -8,13 +8,11 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-<<<<<<< HEAD:app/src/main/java/com/example/egci428_travelguide/MapActivity.kt
 import com.google.firebase.auth.FirebaseAuth
-=======
 import com.example.egci428_travelguide.Activity.ProvinceListActivity
 import com.example.egci428_travelguide.DataSource.RegionDataSource
+import com.example.egci428_travelguide.ProfileActivity
 import com.example.egci428_travelguide.R
->>>>>>> a36aeb91a8d891d510edb17ae35c8021514f1a1e:app/src/main/java/com/example/egci428_travelguide/Activity/MapActivity.kt
 import kotlinx.android.synthetic.main.activity_map.*
 
 class MapActivity : AppCompatActivity() {
@@ -92,7 +90,7 @@ class MapActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.getItemId()
         if(id == R.id.profileItem){
-            val intent = Intent(this,ProfileActivity::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }else if(id == R.id.signoutItem){
             auth.signOut()

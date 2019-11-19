@@ -79,7 +79,6 @@ class SignupActivity : AppCompatActivity() {
                         }
                     // store info in storage
                     uploadFile(user)
-
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Create Account", "createUserWithEmail:failure", task.exception)
