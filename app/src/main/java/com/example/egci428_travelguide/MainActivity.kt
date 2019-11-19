@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.example.egci428_travelguide.Activity.MapActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                     InEmailText.setText("")
                     InPasswordText.setText("")
                     //val intent = Intent(this,ProfileActivity::class.java)
-                    val intent = Intent(this,MapActivity::class.java)
+                    val intent = Intent(this, MapActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.

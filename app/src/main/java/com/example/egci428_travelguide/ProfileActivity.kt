@@ -60,7 +60,6 @@ class ProfileActivity : AppCompatActivity() {
             Ed_Mail = findViewById(R.id.MailText)
             Ed_Mail!!.setEnabled(true)
         }
-
     }
 
     private fun updateUI(user: FirebaseUser?, uid:String) {

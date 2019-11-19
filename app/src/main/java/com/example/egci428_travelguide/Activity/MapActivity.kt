@@ -1,4 +1,4 @@
-package com.example.egci428_travelguide
+package com.example.egci428_travelguide.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +8,13 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+<<<<<<< HEAD:app/src/main/java/com/example/egci428_travelguide/MapActivity.kt
 import com.google.firebase.auth.FirebaseAuth
+=======
+import com.example.egci428_travelguide.Activity.ProvinceListActivity
+import com.example.egci428_travelguide.DataSource.RegionDataSource
+import com.example.egci428_travelguide.R
+>>>>>>> a36aeb91a8d891d510edb17ae35c8021514f1a1e:app/src/main/java/com/example/egci428_travelguide/Activity/MapActivity.kt
 import kotlinx.android.synthetic.main.activity_map.*
 
 class MapActivity : AppCompatActivity() {
@@ -36,21 +42,45 @@ class MapActivity : AppCompatActivity() {
         northRegion.setOnClickListener {
             // your code to perform when the user clicks on the ImageView
             Toast.makeText(this@MapActivity, "North is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "North");
+            startActivity(intent)
+            //finish()
         }
         centralRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "Central is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "Central");
+            startActivity(intent)
+            //finish()
         }
         northeastRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "Northeast is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "Northeast");
+            startActivity(intent)
+            //finish()
         }
         westRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "West is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "West");
+            startActivity(intent)
+            //finish()
         }
         eastRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "East is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "East");
+            startActivity(intent)
+            //finish()
         }
         southRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "South is clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
+            intent.putExtra("region", "South");
+            startActivity(intent)
+            //finish()
         }
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
