@@ -1,8 +1,10 @@
 package com.example.egci428_travelguide.Activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.egci428_travelguide.DataSource.ProvincePlacesDataSource
+import com.example.egci428_travelguide.MainActivity
 import com.example.egci428_travelguide.R
 import kotlinx.android.synthetic.main.activity_province_list.*
 import kotlinx.android.synthetic.main.activity_province_places.*
@@ -21,5 +23,13 @@ class ProvincePlacesActivity : AppCompatActivity() {
             dataSource = ProvincePlacesDataSource(province, placeList, this)
         }
         provinceName.setText(province)
+
+        addPlaceBtn.setOnClickListener {
+            val intent = Intent(this, AddPlaceActivity::class.java)
+            intent.putExtra("province",province)
+            startActivity(intent)
+        }
     }
+
+
 }
