@@ -44,8 +44,8 @@ class RegionDataSource (regionInName: String, listView: ListView, context: Conte
         })
     }
 
-    fun getRegion(regionName : String): Region{
-        var index = regionName.indexOf(regionName)
+    fun getRegion(data_in : String): Region{
+        var index = regionName.indexOf(data_in)
         //default case
         if(index==-1)index = regionName.indexOf("Central")
         println("index " +index)
