@@ -16,7 +16,6 @@ class MapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
         addClickEventListener()
-        val test = RegionDataSource()
     }
     private fun addClickEventListener(){
         // get reference to Text

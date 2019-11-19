@@ -14,7 +14,7 @@ import com.example.egci428_travelguide.R
 import kotlinx.android.synthetic.main.listview_province.view.*
 
 class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>): BaseAdapter(){
-    private val listData: ArrayList<Province> = objects
+    private var listData: ArrayList<Province> = objects
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         println("Show list!!")
