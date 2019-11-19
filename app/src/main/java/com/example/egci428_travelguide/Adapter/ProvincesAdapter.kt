@@ -1,6 +1,7 @@
 package com.example.egci428_travelguide.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.RatingBar
 import android.widget.TextView
+import com.example.egci428_travelguide.Activity.ProvinceListActivity
+import com.example.egci428_travelguide.Activity.ProvincePlacesActivity
 import com.example.egci428_travelguide.DataModel.Province
 import com.example.egci428_travelguide.DataSource.RegionDataSource
 import com.example.egci428_travelguide.R
@@ -33,12 +36,13 @@ class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>):
         viewHolder.name.text = province.name.toString()
 
         //set change page
-//        view.setOnClickListener {
-//            //delete
-//            dataSource.deleteUser(user.id)
-//            listData.removeAt(p0)
-//            notifyDataSetChanged()
-//        }
+        view.setOnClickListener {
+            val intent = Intent(context, ProvincePlacesActivity::class.java)
+            //pass province name to next page
+            intent.putExtra("province", province.name.toString());
+            //start next page
+            context.startActivity(intent)
+        }
         return view
     }
 

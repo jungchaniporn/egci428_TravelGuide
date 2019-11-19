@@ -19,6 +19,7 @@ class ProvinceListActivity : AppCompatActivity() {
         if(data!=null){
             region = data.getString("region")!!
             println(region)
+            //get pressed region and fetch data - show list in RegionDataSource
             dataSource = RegionDataSource(region, provinceList, this)
         }
         regionName.setText(region)

@@ -16,6 +16,7 @@ class RegionDataSource (regionInName: String, listView: ListView, context: Conte
         regionName.forEach {
             tmp.add(Region(it,ArrayList<Province>()))
         }
+        //get data from firebase
         dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 println(p0)
@@ -36,6 +37,7 @@ class RegionDataSource (regionInName: String, listView: ListView, context: Conte
                 regionList = tmp
                 val regionReceived = getRegion(regionInName)
                 println("Region in name "+regionInName)
+                //create list view - since data fetching are done in asynchronous manner, the adpter should be set here
                 val arrayAdapter = ProvincesAdapter(context, regionReceived.provinceList)
                 listView.setAdapter(arrayAdapter)
                 println("Done set adapter")
@@ -44,6 +46,7 @@ class RegionDataSource (regionInName: String, listView: ListView, context: Conte
     }
 
     fun getRegion(data_in : String): Region{
+        //find index of user selected region
         var index = regionName.indexOf(data_in)
         //default case
         if(index==-1)index = regionName.indexOf("Central")
