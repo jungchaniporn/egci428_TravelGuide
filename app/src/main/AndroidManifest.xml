@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.ProvinceListActivity"></activity>
-        <activity android:name=".MapActivity" />
+        <activity android:name=".Activity.MapActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".SigninActivity" />

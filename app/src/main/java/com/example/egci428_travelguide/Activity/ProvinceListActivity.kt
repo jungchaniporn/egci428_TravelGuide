@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_province_list.*
 class ProvinceListActivity : AppCompatActivity() {
     lateinit private var dataSource: RegionDataSource
     var region = "Central" //default case
-    lateinit var regionData:Region
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_province_list)
@@ -23,11 +22,5 @@ class ProvinceListActivity : AppCompatActivity() {
             dataSource = RegionDataSource(region, provinceList, this)
         }
         regionName.setText(region)
-//        val regionlist = dataSource.regionList
-//        println("Region List: "+regionlist.size+" "+regionlist.get(0).provinceList.size)
-//        regionData = dataSource.getRegion(region)
-//        println("Region Data: "+regionData.name+" "+regionData.provinceList.size)
-//        val arrayAdapter = ProvincesAdapter(this, regionData.provinceList)
-//        provinceList.setAdapter(arrayAdapter)
     }
 }

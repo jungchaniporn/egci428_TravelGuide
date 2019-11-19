@@ -8,7 +8,6 @@ import com.example.egci428_travelguide.DataModel.Region
 import com.google.firebase.database.*
 
 class RegionDataSource (regionInName: String, listView: ListView, context: Context){
-    val firebaseURL = "https://egci428finalproject.firebaseio.com"
     val dataReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("province")
     lateinit var regionList:ArrayList<Region>
     val regionName = arrayOf("North","South","Central","West","East","Northeast")

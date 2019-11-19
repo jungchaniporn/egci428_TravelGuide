@@ -23,7 +23,7 @@ class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>):
         if(p1==null){
             val layoutInflater = LayoutInflater.from(p2!!.context)
             view = layoutInflater.inflate(R.layout.listview_province, p2, false)
-            val viewHolder = ViewHolder(view.provinceName, view.provinceRating)
+            val viewHolder = ViewHolder(view.provinceName)
             view.tag = viewHolder
         } else {
             view = p1
@@ -31,7 +31,6 @@ class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>):
 
         val viewHolder = view.tag as ViewHolder
         viewHolder.name.text = province.name.toString()
-        viewHolder.rating.rating = province.rating
 
         //set change page
 //        view.setOnClickListener {
@@ -54,5 +53,5 @@ class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>):
     override fun getCount(): Int {
         return listData.size
     }
-    private class ViewHolder(val name: TextView, val rating: RatingBar)
+    private class ViewHolder(val name: TextView)
 }

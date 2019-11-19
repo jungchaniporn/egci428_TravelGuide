@@ -1,4 +1,4 @@
-package com.example.egci428_travelguide
+package com.example.egci428_travelguide.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.egci428_travelguide.Activity.ProvinceListActivity
 import com.example.egci428_travelguide.DataSource.RegionDataSource
+import com.example.egci428_travelguide.R
 import kotlinx.android.synthetic.main.activity_map.*
 
 class MapActivity : AppCompatActivity() {
