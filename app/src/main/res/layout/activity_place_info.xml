@@ -93,6 +93,31 @@
                 android:padding="10dp"
                 android:text="contact Information..."
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E4E3E3"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <ImageView
+                    android:id="@+id/userAvatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@drawable/avatar" />
+
+                <TextView
+                    android:id="@+id/usernameInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:gravity="center_vertical"
+                    android:padding="15dp"
+                    android:text="username"
+                    android:textColor="#050505"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
