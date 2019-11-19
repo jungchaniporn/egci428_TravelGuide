@@ -34,7 +34,7 @@ class ProvincePlacesDataSource (provinceInName: String, listView: ListView, cont
                 placesList = tmp
                 //val regionReceived = getRegion(provinceInName)
                 println("Places size "+placesList.size)
-                val arrayAdapter = ProvincePlacesAdapter(context, placesList)
+                val arrayAdapter = ProvincePlacesAdapter(context, placesList, provinceInName)
                 listView.setAdapter(arrayAdapter)
                 println("Done set adapter")
             }

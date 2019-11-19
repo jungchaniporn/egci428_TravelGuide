@@ -7,18 +7,33 @@
     android:orientation="vertical"
     tools:context=".Activity.ProvinceListActivity">
 
-    <TextView
-        android:id="@+id/provinceName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:background="@android:color/background_dark"
-        android:padding="20dp"
-        android:text="provinceName"
-        android:textAlignment="center"
-        android:textColor="?attr/colorBackgroundFloating"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/provinceName"
+            android:layout_width="362dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/background_dark"
+            android:padding="20dp"
+            android:text="provinceName"
+            android:textAlignment="center"
+            android:textColor="?attr/colorBackgroundFloating"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/addPlaceBtn"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:background="@android:drawable/ic_menu_add"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/placeList"
@@ -26,5 +41,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp" >
+
+    </ListView>
 </LinearLayout>
