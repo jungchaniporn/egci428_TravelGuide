@@ -11,8 +11,8 @@ class PlaceInfo :Serializable {
     constructor(){
         //default constructor for firebase
     }
-    constructor( id:String="", addr: String ="", info: String = "", phone:String=""){
-        this.uid = id
+    constructor( userid:String="", addr: String ="", info: String = "", phone:String=""){
+        this.uid = userid
         this.address = addr
         this.placeInfo = info
         this.tel = phone

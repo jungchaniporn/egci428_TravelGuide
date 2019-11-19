@@ -1,19 +1,22 @@
 package com.example.egci428_travelguide.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.egci428_travelguide.Activity.PlaceInfoActivity
+import com.example.egci428_travelguide.Activity.ProvincePlacesActivity
 import com.example.egci428_travelguide.DataModel.Place
 import com.example.egci428_travelguide.DataModel.Province
 import com.example.egci428_travelguide.R
 import kotlinx.android.synthetic.main.listview_province.view.*
 import kotlinx.android.synthetic.main.listview_provinceplace.view.*
 
-class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>): BaseAdapter(){
+class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>, var provinceInName: String): BaseAdapter(){
     private var listData: ArrayList<Place> = objects
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
@@ -35,12 +38,15 @@ class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>
         //viewHolder.img =
 
         //set change page
-//        view.setOnClickListener {
-//            //delete
-//            dataSource.deleteUser(user.id)
-//            listData.removeAt(p0)
-//            notifyDataSetChanged()
-//        }
+        view.setOnClickListener {
+            //to specific place page
+            val intent = Intent(context, PlaceInfoActivity::class.java)
+            //pass province name amnd place name to next page
+            intent.putExtra("province", provinceInName);
+            intent.putExtra("place", place.name);
+            //start next page
+            context.startActivity(intent)
+        }
         return view
     }
 
