@@ -1,21 +1,30 @@
 package com.example.egci428_travelguide.Activity
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import com.example.egci428_travelguide.R
+import com.example.egci428_travelguide.DataModel.PlaceInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_place.*
-import java.io.IOException
+import java.io.*
+import java.util.*
+import com.google.android.gms.common.util.IOUtils.toByteArray
+import android.R.attr.bitmap
+
+
+
 
 class AddPlaceActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -24,13 +33,15 @@ class AddPlaceActivity : AppCompatActivity() {
     internal var storageReference: StorageReference? =null
     private var filePath: Uri? =null
     private val PICK_REQUEST = 2222
+    val REQUEST_IMAGE_CAPTURE = 1
+    var imageBitmap:Bitmap? = null
 //    var i = 0
     var province = ""
     var uid:String = ""
 //    var pathArray:ArrayList<Uri>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_place)
+        setContentView(com.example.egci428_travelguide.R.layout.activity_add_place)
         val data = intent.extras
         if(data!=null){
             province = data.getString("province")!!
@@ -52,6 +63,17 @@ class AddPlaceActivity : AppCompatActivity() {
         submitBtn.setOnClickListener {
             savePlace()
         }
+        CameraBtn.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
     }
     private fun savePlace(){
         var name = placeNameText.text.toString()
@@ -61,7 +83,7 @@ class AddPlaceActivity : AppCompatActivity() {
 
 //        for (j in 0..2){
             val imageRef = storageReference!!.child("province/$province/$name")
-            // upload file
+            // upload file from camera roll to storage
             imageRef.putFile(filePath!!)
                 .addOnSuccessListener {
                     Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
@@ -78,13 +100,29 @@ class AddPlaceActivity : AppCompatActivity() {
                     contactText.setText("")
                     addPlaceImg1.setImageBitmap(null)
                 }
+                // upload bitmap took by camera to storage
+                val baos = ByteArrayOutputStream()
+                imageBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
+                val imageRef_camera = storageReference!!.child("province/$province/Bitmap/$name")
+                imageRef_camera.putBytes(data)
+                    .addOnSuccessListener {
+                        Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener{
+                        Toast.makeText(applicationContext, "Failed", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnProgressListener { taskSnapshot ->
+                        val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
+                        Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
+                    }
 //            database.child("$name/info/images/$j").setValue("province/$province/$name"+j)
 //        }
 
-
         database.child("$name/info/address").setValue(address)
         database.child("$name/info/placeInfo").setValue(info)
-        database.child("$name/info/images").setValue("province/$province/$name")
+        database.child("$name/info/images/0").setValue("province/$province/$name")
+        database.child("$name/info/images/1").setValue("province/$province/Bitmap/$name")
         database.child("$name/info/tel").setValue(contract)
         database.child("$name/info/uid").setValue(uid)
 
@@ -120,5 +158,11 @@ class AddPlaceActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            imageBitmap = data!!.extras!!.get("data") as Bitmap
+            addPlaceImg1.setImageBitmap(imageBitmap)
+        }
     }
+
 }
