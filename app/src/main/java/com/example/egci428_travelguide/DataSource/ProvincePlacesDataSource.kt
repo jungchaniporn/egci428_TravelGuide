@@ -14,12 +14,13 @@ class ProvincePlacesDataSource (provinceInName: String, listView: ListView, cont
     val dataReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("province/$provinceInName/place")
     lateinit var placesList:ArrayList<Place>
     init{
-        var tmp = ArrayList<Place>()
-        dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
+        //var tmp = ArrayList<Place>()
+        dataReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 println(p0)
             }
             override fun onDataChange(snapshot: DataSnapshot) {
+                var tmp = ArrayList<Place>()
                 val children = snapshot.children
                 children.forEach {
                     val placename = it.key
