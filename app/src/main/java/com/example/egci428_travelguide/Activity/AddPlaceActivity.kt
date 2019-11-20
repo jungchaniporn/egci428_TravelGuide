@@ -97,7 +97,8 @@ class AddPlaceActivity : AppCompatActivity() {
             }
             imgBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
-            val imageRef_camera = storageReference!!.child("province/$province/Bitmap/$name"+j)
+            val id = UUID.randomUUID().toString()
+            val imageRef_camera = storageReference!!.child("province/$province/$name/$id")
             imageRef_camera.putBytes(data)
                 .addOnSuccessListener {
                     Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
@@ -109,16 +110,21 @@ class AddPlaceActivity : AppCompatActivity() {
                     val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
                     Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
                 }
-            database.child("$name/info/images/$j").setValue("province/$province/$name"+j)
+            database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
         }
 
         database.child("$name/info/address").setValue(address)
         database.child("$name/info/placeInfo").setValue(info)
-//        database.child("$name/info/images/0").setValue("province/$province/$name")
-//        database.child("$name/info/images/1").setValue("province/$province/Bitmap/$name")
         database.child("$name/info/tel").setValue(contract)
         database.child("$name/info/uid").setValue(uid)
 
+        placeNameText.setText("")
+        infoText.setText("")
+        addressText.setText("")
+        contactText.setText("")
+        addPlaceImg1.setImageBitmap(null)
+        addPlaceImg2.setImageBitmap(null)
+        addPlaceImg3.setImageBitmap(null)
     }
     private fun showFileChooser() {
         val intent = Intent()
@@ -134,18 +140,22 @@ class AddPlaceActivity : AppCompatActivity() {
 //            pathArray!!.add(filePath!!)
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-                if(i==0){
-                    addPlaceImg1!!.setImageBitmap(bitmap)
-                    imageBitmap1=bitmap
-                    i++
-                }else if(i==1){
-                    addPlaceImg2!!.setImageBitmap(bitmap)
-                    imageBitmap2=bitmap
-                    i++
-                }else{
-                    addPlaceImg3!!.setImageBitmap(bitmap)
-                    imageBitmap3=bitmap
-                    i=0
+                when(i){
+                    0 -> {
+                        addPlaceImg1!!.setImageBitmap(bitmap)
+                        imageBitmap1=bitmap
+                        i++
+                    }
+                    1 -> {
+                        addPlaceImg2!!.setImageBitmap(bitmap)
+                        imageBitmap2=bitmap
+                        i++
+                    }
+                    2 -> {
+                        addPlaceImg3!!.setImageBitmap(bitmap)
+                        imageBitmap3=bitmap
+                        i=0
+                    }
                 }
 //                imgArray!!.add(imageBitmap_photo!!)
                 Log.d("test","test")
@@ -156,18 +166,22 @@ class AddPlaceActivity : AppCompatActivity() {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
-            if(i==0){
-                addPlaceImg1!!.setImageBitmap(imageBitmap)
-                imageBitmap1=imageBitmap
-                i++
-            }else if(i==1){
-                addPlaceImg2!!.setImageBitmap(imageBitmap)
-                imageBitmap2=imageBitmap
-                i++
-            }else{
-                addPlaceImg3!!.setImageBitmap(imageBitmap)
-                imageBitmap3=imageBitmap
-                i=0
+            when(i){
+                0 -> {
+                    addPlaceImg1!!.setImageBitmap(imageBitmap)
+                    imageBitmap1=imageBitmap
+                    i++
+                }
+                1 -> {
+                    addPlaceImg2!!.setImageBitmap(imageBitmap)
+                    imageBitmap2=imageBitmap
+                    i++
+                }
+                2 -> {
+                    addPlaceImg3!!.setImageBitmap(imageBitmap)
+                    imageBitmap3=imageBitmap
+                    i=0
+                }
             }
 //            imgArray!!.add(imageBitmap!!)
         }
