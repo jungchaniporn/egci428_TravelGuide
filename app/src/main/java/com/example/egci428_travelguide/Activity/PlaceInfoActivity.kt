@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import com.synnapps.carouselview.CarouselView
+import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_province_places.*
@@ -134,6 +136,7 @@ class PlaceInfoActivity : AppCompatActivity() {
                             Picasso
                                 .get()
                                 .load(it)
+                                .fit()
                                 .into(userimgView);
                         }.addOnFailureListener {
                             // Handle any errors
@@ -160,5 +163,31 @@ class PlaceInfoActivity : AppCompatActivity() {
         placeInfo.setText(data.placeInfo)
         addressInfo.setText(data.address)
         contactInfo.setText(data.tel)
+        //if the selected place have an image
+        val carouselView = findViewById(R.id.carouselView) as CarouselView;
+        if(data.images.size>0){
+            var imageListener: ImageListener = object : ImageListener {
+                override fun setImageForPosition(position: Int, imageView: ImageView) {
+                    val storageReference = FirebaseStorage.getInstance().reference
+                    //get image
+                    storageReference!!.child(data.images.get(position))
+                        .downloadUrl.addOnSuccessListener {
+                        Picasso
+                            .get()
+                            .load(it)
+                            .into(imageView)
+                    }.addOnFailureListener {
+                        // Handle any errors
+                        println("Set image unsuccessful")
+                    }
+
+                }
+            }
+            carouselView.setPageCount(data.images.size);
+            carouselView.setImageListener(imageListener);
+        }else{
+            //in case no image, don't show carousel
+            carouselView.visibility = View.GONE
+        }
     }
 }
