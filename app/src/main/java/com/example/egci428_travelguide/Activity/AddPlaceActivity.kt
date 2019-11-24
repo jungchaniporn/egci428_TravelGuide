@@ -35,10 +35,14 @@ class AddPlaceActivity : AppCompatActivity() {
     private val PICK_REQUEST = 2222
     val REQUEST_IMAGE_CAPTURE = 1
     var imageBitmap:Bitmap? = null
-//    var i = 0
+    var imageBitmap1:Bitmap? = null
+    var imageBitmap2:Bitmap? = null
+    var imageBitmap3:Bitmap? = null
+    var i = 0
     var province = ""
     var uid:String = ""
-//    var pathArray:ArrayList<Uri>? = null
+    var imgArray:ArrayList<Bitmap>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.egci428_travelguide.R.layout.activity_add_place)
@@ -81,10 +85,21 @@ class AddPlaceActivity : AppCompatActivity() {
         var address = addressText.text.toString()
         var contract = contactText.text.toString()
 
-//        for (j in 0..2){
-            val imageRef = storageReference!!.child("province/$province/$name")
-            // upload file from camera roll to storage
-            imageRef.putFile(filePath!!)
+        for (j in 0..2){
+            val baos = ByteArrayOutputStream()
+            val imgBitmap:Bitmap
+            if(j==0){
+                imgBitmap = imageBitmap1!!
+            }else if(j==1){
+                imgBitmap = imageBitmap2!!
+            }else{
+                imgBitmap = imageBitmap3!!
+            }
+            imgBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+            val id = UUID.randomUUID().toString()
+            val imageRef_camera = storageReference!!.child("province/$province/$name/$id")
+            imageRef_camera.putBytes(data)
                 .addOnSuccessListener {
                     Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
                 }
@@ -93,40 +108,23 @@ class AddPlaceActivity : AppCompatActivity() {
                 }
                 .addOnProgressListener { taskSnapshot ->
                     val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
-                    Toast.makeText(applicationContext, "Uploaded "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
-                    placeNameText.setText("")
-                    infoText.setText("")
-                    addressText.setText("")
-                    contactText.setText("")
-                    addPlaceImg1.setImageBitmap(null)
+                    Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
                 }
-                // upload bitmap took by camera to storage
-                val baos = ByteArrayOutputStream()
-                imageBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                val data = baos.toByteArray()
-                val imageRef_camera = storageReference!!.child("province/$province/Bitmap/$name")
-                imageRef_camera.putBytes(data)
-                    .addOnSuccessListener {
-                        Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener{
-                        Toast.makeText(applicationContext, "Failed", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnProgressListener { taskSnapshot ->
-                        val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
-                        Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
-                    }
-//            database.child("$name/info/images/$j").setValue("province/$province/$name"+j)
-//        }
+            database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
+        }
 
         database.child("$name/info/address").setValue(address)
         database.child("$name/info/placeInfo").setValue(info)
-        database.child("$name/info/images/0").setValue("province/$province/$name")
-        database.child("$name/info/images/1").setValue("province/$province/Bitmap/$name")
         database.child("$name/info/tel").setValue(contract)
         database.child("$name/info/uid").setValue(uid)
 
-
+        placeNameText.setText("")
+        infoText.setText("")
+        addressText.setText("")
+        contactText.setText("")
+        addPlaceImg1.setImageBitmap(null)
+        addPlaceImg2.setImageBitmap(null)
+        addPlaceImg3.setImageBitmap(null)
     }
     private fun showFileChooser() {
         val intent = Intent()
@@ -142,18 +140,25 @@ class AddPlaceActivity : AppCompatActivity() {
 //            pathArray!!.add(filePath!!)
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-                addPlaceImg2!!.setImageBitmap(bitmap)
-//                if(i==0){
-//                    addPlaceImg1!!.setImageBitmap(bitmap)
-//                    i++
-//                }else if(i==1){
-//                    addPlaceImg2!!.setImageBitmap(bitmap)
-//                    i++
-//                }else{
-//                    addPlaceImg3!!.setImageBitmap(bitmap)
-//                    i=0
-//                }
-
+                when(i){
+                    0 -> {
+                        addPlaceImg1!!.setImageBitmap(bitmap)
+                        imageBitmap1=bitmap
+                        i++
+                    }
+                    1 -> {
+                        addPlaceImg2!!.setImageBitmap(bitmap)
+                        imageBitmap2=bitmap
+                        i++
+                    }
+                    2 -> {
+                        addPlaceImg3!!.setImageBitmap(bitmap)
+                        imageBitmap3=bitmap
+                        i=0
+                    }
+                }
+//                imgArray!!.add(imageBitmap_photo!!)
+                Log.d("test","test")
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -161,7 +166,24 @@ class AddPlaceActivity : AppCompatActivity() {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
-            addPlaceImg1.setImageBitmap(imageBitmap)
+            when(i){
+                0 -> {
+                    addPlaceImg1!!.setImageBitmap(imageBitmap)
+                    imageBitmap1=imageBitmap
+                    i++
+                }
+                1 -> {
+                    addPlaceImg2!!.setImageBitmap(imageBitmap)
+                    imageBitmap2=imageBitmap
+                    i++
+                }
+                2 -> {
+                    addPlaceImg3!!.setImageBitmap(imageBitmap)
+                    imageBitmap3=imageBitmap
+                    i=0
+                }
+            }
+//            imgArray!!.add(imageBitmap!!)
         }
     }
 
