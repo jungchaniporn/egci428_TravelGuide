@@ -27,6 +27,7 @@ class ProvincePlacesActivity : AppCompatActivity() {
         addPlaceBtn.setOnClickListener {
             val intent = Intent(this, AddPlaceActivity::class.java)
             intent.putExtra("province",province)
+            intent.putExtra("from","provincePlace")
             startActivity(intent)
         }
     }

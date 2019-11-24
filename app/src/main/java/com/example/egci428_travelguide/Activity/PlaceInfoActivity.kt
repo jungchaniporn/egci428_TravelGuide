@@ -1,17 +1,15 @@
 package com.example.egci428_travelguide.Activity
 
-import android.graphics.Color
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.egci428_travelguide.DataModel.Place
 import com.example.egci428_travelguide.DataModel.PlaceInfo
-import com.example.egci428_travelguide.DataSource.ProvincePlacesDataSource
 import com.example.egci428_travelguide.R
 import com.example.egci428_travelguide.UserInfo
 import com.google.firebase.auth.FirebaseAuth
@@ -22,8 +20,6 @@ import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.activity_place_info.*
-import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.activity_province_places.*
 
 class PlaceInfoActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -56,7 +52,7 @@ class PlaceInfoActivity : AppCompatActivity() {
                     updateData(placeData!!)
                 }
                 if (placeData!!.uid == currentUser!!.uid) {//current user is the post owner
-                    val editbtnView = findViewById(R.id.editBtn) as View
+                    val editbtnView = findViewById(R.id.editPlaceBtn) as View
                     val deletebtnView = findViewById(R.id.deleteBtn) as View
                     //show edit and delete button
                     editbtnView.visibility = View.VISIBLE
@@ -113,6 +109,18 @@ class PlaceInfoActivity : AppCompatActivity() {
 
                         // Display the alert dialog on app interface
                         dialog.show()
+                    }
+                    editPlaceBtn.setOnClickListener {
+                        val intent = Intent(this@PlaceInfoActivity, AddPlaceActivity::class.java)
+                        intent.putExtra("from","placeInfo")
+                        intent.putExtra("province",province)
+                        intent.putExtra("place",place)
+                        intent.putExtra("address",placeData.address)
+                        intent.putExtra("placeInfo",placeData.placeInfo)
+                        intent.putExtra("tel",placeData.tel)
+                        intent.putExtra("images",placeData.images)
+                        intent.putExtra("uid",placeData.uid)
+                        startActivity(intent)
                     }
                 } else {
                     val placenameView = findViewById(R.id.placeName) as View

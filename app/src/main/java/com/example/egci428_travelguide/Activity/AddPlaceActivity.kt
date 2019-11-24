@@ -2,7 +2,6 @@ package com.example.egci428_travelguide.Activity
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -20,10 +19,14 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_place.*
 import java.io.*
 import java.util.*
-import com.google.android.gms.common.util.IOUtils.toByteArray
-import android.R.attr.bitmap
-
-
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
+import com.bumptech.glide.Glide
+import com.example.egci428_travelguide.R
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_profile.*
+import kotlin.collections.ArrayList
 
 
 class AddPlaceActivity : AppCompatActivity() {
@@ -35,31 +38,76 @@ class AddPlaceActivity : AppCompatActivity() {
     private val PICK_REQUEST = 2222
     val REQUEST_IMAGE_CAPTURE = 1
     var imageBitmap:Bitmap? = null
-    var imageBitmap1:Bitmap? = null
-    var imageBitmap2:Bitmap? = null
-    var imageBitmap3:Bitmap? = null
+    var imgView = ArrayList<ImageView>()
+    var imgBitmap = ArrayList<Bitmap>()
     var i = 0
     var province = ""
     var uid:String = ""
-    var imgArray:ArrayList<Bitmap>? = null
-
+    var place = ""
+    var from = ""
+    var placeData =  PlaceInfo("","","","",ArrayList<String>())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.egci428_travelguide.R.layout.activity_add_place)
-        val data = intent.extras
-        if(data!=null){
-            province = data.getString("province")!!
-        }
+        setContentView(R.layout.activity_add_place)
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
         uid = auth.currentUser!!.uid
 
-        // Initialize Firebase DB
-        database = FirebaseDatabase.getInstance().getReference("province/$province/place")
-
         // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance()
         storageReference = storage!!.reference
+
+        imgView.add(addPlaceImg1!!)
+        imgView.add(addPlaceImg2!!)
+        imgView.add(addPlaceImg3!!)
+        val data = intent.extras
+        if(data!=null){
+            var Ed_name: EditText? = null
+            from = data.getString("from")!!
+            when(from){
+                "provincePlace" ->{
+                    Log.d("add", "from ProvincePlace")
+                    province = data.getString("province")!!
+                }
+                "placeInfo" -> {
+                    Log.d("add", "from PlaceInfo")
+                    province = data.getString("province")!!
+                    place = data.getString("place")!!
+                    placeData!!.address = data.getString("address")!!
+                    placeData!!.placeInfo = data.getString("placeInfo")!!
+                    placeData!!.tel = data.getString("tel")!!
+                    placeData!!.images = data.getStringArrayList("images")!!
+                    placeData!!.uid = data.getString("uid")!!
+                    placeNameText.setText(place)
+                    Ed_name = findViewById(R.id.placeNameText)
+                    Ed_name!!.setEnabled(false)
+                    infoText.setText(placeData!!.placeInfo)
+                    addressText.setText(placeData!!.address)
+                    contactText.setText(placeData!!.tel)
+
+                    for (n in 0..2){
+                        storageReference!!.child(placeData.images.get(n))
+                            .downloadUrl.addOnSuccessListener {
+                            Picasso
+                                .get()
+                                .load(it)
+                                .into(imgView[n])
+//                            var temp = Bitmap.createBitmap(imgView[n].getWidth(), imgView[n].getHeight(), Bitmap.Config.RGB_565)
+                            var temp = imgView[n].getDrawable().toBitmap()
+                            imgBitmap.add(temp)
+                        }.addOnFailureListener {
+                            // Handle any errors
+                            println("Set image unsuccessful")
+                        }
+
+                    }
+                }
+            }
+
+        }
+        // Initialize Firebase DB
+        database = FirebaseDatabase.getInstance().getReference("province/$province/place")
+
 
         importImgBtn.setOnClickListener {
             showFileChooser()
@@ -87,18 +135,15 @@ class AddPlaceActivity : AppCompatActivity() {
 
         for (j in 0..2){
             val baos = ByteArrayOutputStream()
-            val imgBitmap:Bitmap
-            if(j==0){
-                imgBitmap = imageBitmap1!!
-            }else if(j==1){
-                imgBitmap = imageBitmap2!!
-            }else{
-                imgBitmap = imageBitmap3!!
-            }
-            imgBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            imgBitmap[j].compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
             val id = UUID.randomUUID().toString()
-            val imageRef_camera = storageReference!!.child("province/$province/$name/$id")
+            var imageRef_camera:StorageReference? = null
+            if(from == "placeInfo"){
+                imageRef_camera = storageReference!!.child(placeData.images[j])
+            }else{
+                imageRef_camera = storageReference!!.child("province/$province/$name/$id")
+            }
             imageRef_camera.putBytes(data)
                 .addOnSuccessListener {
                     Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
@@ -110,7 +155,13 @@ class AddPlaceActivity : AppCompatActivity() {
                     val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
                     Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
                 }
-            database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
+            if(from == "placeInfo"){
+                database.child("$name/info/images/$j").setValue(placeData.images[j])
+
+            }else{
+                database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
+            }
+
         }
 
         database.child("$name/info/address").setValue(address)
@@ -137,27 +188,14 @@ class AddPlaceActivity : AppCompatActivity() {
         if (requestCode == PICK_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null){
             filePath = data.data
             Log.d("firepath",filePath.toString())
-//            pathArray!!.add(filePath!!)
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-                when(i){
-                    0 -> {
-                        addPlaceImg1!!.setImageBitmap(bitmap)
-                        imageBitmap1=bitmap
-                        i++
-                    }
-                    1 -> {
-                        addPlaceImg2!!.setImageBitmap(bitmap)
-                        imageBitmap2=bitmap
-                        i++
-                    }
-                    2 -> {
-                        addPlaceImg3!!.setImageBitmap(bitmap)
-                        imageBitmap3=bitmap
-                        i=0
-                    }
+                imgView[i].setImageBitmap(bitmap)
+                imgBitmap.add(bitmap!!)
+                i++
+                if (i==3){
+                    i = 0
                 }
-//                imgArray!!.add(imageBitmap_photo!!)
                 Log.d("test","test")
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -166,24 +204,12 @@ class AddPlaceActivity : AppCompatActivity() {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
-            when(i){
-                0 -> {
-                    addPlaceImg1!!.setImageBitmap(imageBitmap)
-                    imageBitmap1=imageBitmap
-                    i++
-                }
-                1 -> {
-                    addPlaceImg2!!.setImageBitmap(imageBitmap)
-                    imageBitmap2=imageBitmap
-                    i++
-                }
-                2 -> {
-                    addPlaceImg3!!.setImageBitmap(imageBitmap)
-                    imageBitmap3=imageBitmap
-                    i=0
-                }
+            imgView[i].setImageBitmap(imageBitmap)
+            imgBitmap.add(imageBitmap!!)
+            i++
+            if (i==3){
+                i = 0
             }
-//            imgArray!!.add(imageBitmap!!)
         }
     }
 

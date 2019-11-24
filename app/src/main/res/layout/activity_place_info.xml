@@ -25,7 +25,7 @@
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/editBtn"
+            android:id="@+id/editPlaceBtn"
             android:layout_width="49dp"
             android:layout_height="49dp"
             android:background="@android:drawable/ic_menu_edit"

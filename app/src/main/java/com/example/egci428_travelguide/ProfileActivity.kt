@@ -14,18 +14,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import android.widget.EditText
-import android.widget.ImageView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.bumptech.glide.Glide
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_signup.*
 import java.io.IOException
-import java.util.*
 
 
 //import sun.jvm.hotspot.ci.ciObjectFactory.getMetadata
@@ -165,7 +160,7 @@ class ProfileActivity : AppCompatActivity() {
                         Log.d("Link",it.toString())
                         Glide.with(context)
                             .load(it)
-                            .into(profileImg);
+                            .into(profileImg)
 //                        profileImg.setImageURI(it)
                     }.addOnFailureListener {
                         // Handle any errors

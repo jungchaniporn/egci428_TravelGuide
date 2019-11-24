@@ -88,8 +88,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Import Photo"
         android:enabled="false"
+        android:text="Import Photo"
         app:layout_constraintEnd_toStartOf="@+id/saveBtn"
         app:layout_constraintStart_toEndOf="@+id/editBtn"
         app:layout_constraintTop_toBottomOf="@+id/MailText" />
