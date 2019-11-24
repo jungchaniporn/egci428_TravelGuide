@@ -1,11 +1,13 @@
 package com.example.egci428_travelguide
 
 import android.content.Intent
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
 import com.example.egci428_travelguide.Activity.MapActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +19,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val button = findViewById<Button>(R.id.signupBtn);
+        button.paintFlags = button.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
