@@ -13,6 +13,14 @@ import com.example.egci428_travelguide.Activity.ProvincePlacesActivity
 import com.example.egci428_travelguide.DataModel.Place
 import com.example.egci428_travelguide.DataModel.Province
 import com.example.egci428_travelguide.R
+import com.example.egci428_travelguide.UserInfo
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.listview_province.view.*
 import kotlinx.android.synthetic.main.listview_provinceplace.view.*
 
@@ -34,8 +42,23 @@ class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>
 
         val viewHolder = view.tag as ViewHolder
         viewHolder.name.text = place.name.toString()
-        //set image
-        //viewHolder.img =
+        //set image if there is a image
+        if(place.placeInfo.images.size > 0){
+            val storageReference = FirebaseStorage.getInstance().reference
+            //get image
+            storageReference!!.child(place.placeInfo.images.get(0))
+                .downloadUrl.addOnSuccessListener {
+                Picasso
+                    .get()
+                    .load(it)
+                    .fit()
+                    .into(viewHolder.img);
+            }.addOnFailureListener {
+                // Handle any errors
+                println("Set image unsuccessful")
+            }
+        }
+
 
         //set change page
         view.setOnClickListener {

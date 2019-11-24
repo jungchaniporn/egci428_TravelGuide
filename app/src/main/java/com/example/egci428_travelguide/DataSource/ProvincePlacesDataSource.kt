@@ -19,11 +19,14 @@ class ProvincePlacesDataSource (provinceInName: String, listView: ListView, cont
             override fun onCancelled(p0: DatabaseError) {
                 println(p0)
             }
+            //fetch data of place list
             override fun onDataChange(snapshot: DataSnapshot) {
                 var tmp = ArrayList<Place>()
                 val children = snapshot.children
+                //loop through each place
                 children.forEach {
                     val placename = it.key
+                    //get nested component
                     it.children.forEach{
                         if(it.key=="info") {
                             tmp.add(Place(placename!!,it.getValue(PlaceInfo::class.java)!!))
@@ -34,7 +37,7 @@ class ProvincePlacesDataSource (provinceInName: String, listView: ListView, cont
                 println("Function ended")
                 placesList = tmp
                 //val regionReceived = getRegion(provinceInName)
-                println("Places size "+placesList.size)
+                println("Places images "+placesList.get(0).placeInfo.images.size)
                 val arrayAdapter = ProvincePlacesAdapter(context, placesList, provinceInName)
                 listView.setAdapter(arrayAdapter)
                 println("Done set adapter")

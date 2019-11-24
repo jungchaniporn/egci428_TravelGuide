@@ -29,7 +29,7 @@ class PlaceInfoActivity : AppCompatActivity() {
     lateinit var dataReference: DatabaseReference
     var province = ""
     var place = ""
-    var placeData = PlaceInfo("","","")
+    var placeData = PlaceInfo("","","","",ArrayList<String>())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_info)
@@ -56,6 +56,7 @@ class PlaceInfoActivity : AppCompatActivity() {
                 if (placeData!!.uid == currentUser!!.uid) {//current user is the post owner
                     val editbtnView = findViewById(R.id.editBtn) as View
                     val deletebtnView = findViewById(R.id.deleteBtn) as View
+                    //show edit and delete button
                     editbtnView.visibility = View.VISIBLE
                     deletebtnView.visibility = View.VISIBLE
                     deleteBtn.setOnClickListener {
@@ -127,6 +128,7 @@ class PlaceInfoActivity : AppCompatActivity() {
                         usernameInfo.setText(userData!!.username)
                         val userimgView = findViewById(R.id.userAvatar) as ImageView
                         val storageReference = FirebaseStorage.getInstance().reference
+                        //get image
                         storageReference!!.child(userData!!.imageRef)
                             .downloadUrl.addOnSuccessListener {
                             Picasso
