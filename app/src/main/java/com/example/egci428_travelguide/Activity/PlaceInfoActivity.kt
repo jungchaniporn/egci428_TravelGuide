@@ -136,18 +136,20 @@ class PlaceInfoActivity : AppCompatActivity() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val userData = dataSnapshot.getValue(UserInfo::class.java)
                         usernameInfo.setText(userData!!.username)
-                        val userimgView = findViewById(R.id.userAvatar) as ImageView
-                        val storageReference = FirebaseStorage.getInstance().reference
-                        //get image
-                        storageReference!!.child(userData!!.imageRef)
-                            .downloadUrl.addOnSuccessListener {
-                            Picasso
-                                .get()
-                                .load(it)
-                                .fit()
-                                .into(userimgView);
-                        }.addOnFailureListener {
-                            // Handle any errors
+                        if(userData.imageRef!=null && userData.imageRef.isNotEmpty()){
+                            val userimgView = findViewById(R.id.userAvatar) as ImageView
+                            val storageReference = FirebaseStorage.getInstance().reference
+                            //get image
+                            storageReference!!.child(userData!!.imageRef)
+                                .downloadUrl.addOnSuccessListener {
+                                Picasso
+                                    .get()
+                                    .load(it)
+                                    .fit()
+                                    .into(userimgView);
+                            }.addOnFailureListener {
+                                // Handle any errors
+                            }
                         }
                     }
 
@@ -174,6 +176,7 @@ class PlaceInfoActivity : AppCompatActivity() {
         //if the selected place have an image
         val carouselView = findViewById(R.id.carouselView) as CarouselView;
         if(data.images.size>0){
+            println("Image : "+ data.images.size)
             var imageListener: ImageListener = object : ImageListener {
                 override fun setImageForPosition(position: Int, imageView: ImageView) {
                     val storageReference = FirebaseStorage.getInstance().reference
@@ -191,8 +194,8 @@ class PlaceInfoActivity : AppCompatActivity() {
 
                 }
             }
-            carouselView.setPageCount(data.images.size);
-            carouselView.setImageListener(imageListener);
+            carouselView.setImageListener(imageListener)
+            carouselView.setPageCount(data.images.size)
         }else{
             //in case no image, don't show carousel
             carouselView.visibility = View.GONE
