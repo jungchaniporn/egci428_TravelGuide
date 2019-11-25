@@ -1,5 +1,6 @@
 package com.example.egci428_travelguide.Adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -40,8 +41,11 @@ class ProvincesAdapter (var context: Context, var objects: ArrayList<Province>):
             val intent = Intent(context, ProvincePlacesActivity::class.java)
             //pass province name to next page
             intent.putExtra("province", province.name.toString());
+            intent.putExtra("region", province.region)
             //start next page
             context.startActivity(intent)
+            val activity = context as Activity
+            activity.finish()
         }
         return view
     }

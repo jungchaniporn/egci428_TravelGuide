@@ -1,17 +1,21 @@
 package com.example.egci428_travelguide.Activity
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
+import android.hardware.fingerprint.FingerprintManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.egci428_travelguide.*
 import com.example.egci428_travelguide.DataModel.PlaceInfo
 import com.example.egci428_travelguide.R
-import com.example.egci428_travelguide.UserInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -25,16 +29,21 @@ class PlaceInfoActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var currentUser: FirebaseUser
     lateinit var dataReference: DatabaseReference
+    var i = 0
     var province = ""
     var place = ""
+    var region =""
     var placeData = PlaceInfo("","","","",ArrayList<String>())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_info)
+        // action bar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val data = intent.extras
         if (data != null) {
             province = data.getString("province")!!
             place = data.getString("place")!!
+            region = data.getString("region")!!
         }
         placeName.setText(place)
         //check current user
@@ -112,6 +121,7 @@ class PlaceInfoActivity : AppCompatActivity() {
                     }
                     editPlaceBtn.setOnClickListener {
                         val intent = Intent(this@PlaceInfoActivity, AddPlaceActivity::class.java)
+                        intent.putExtra("region",region)
                         intent.putExtra("from","placeInfo")
                         intent.putExtra("province",province)
                         intent.putExtra("place",place)
@@ -201,4 +211,54 @@ class PlaceInfoActivity : AppCompatActivity() {
             carouselView.visibility = View.GONE
         }
     }
+    override fun onResume() {
+        super.onResume()
+        if(i!=0){
+            val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
+                    as KeyguardManager
+            val fingerprintmng = getSystemService(Context.FINGERPRINT_SERVICE)
+                    as FingerprintManager
+            val fingerprintauth = FingerprintAuth(this, keyguardmng, fingerprintmng)
+            if (fingerprintauth.checkLockScreen()) {
+                fingerprintauth.generateKey()
+                if (fingerprintauth.initCipher()) {
+                    fingerprintauth.cipher.let {
+                        fingerprintauth.cryptoObject = FingerprintManager.CryptoObject(it)
+                    }
+                    val helper = FingerprintHelper(this)
+                    if (fingerprintauth.fingerprintManager != null && fingerprintauth.cryptoObject != null) {
+                        helper.startAuth(fingerprintauth.fingerprintManager, fingerprintauth.cryptoObject)
+                    }
+                }
+            }
+        }
+        i++
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        getMenuInflater().inflate(R.menu.menu_detail,menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.getItemId()
+        if(id == R.id.profileItem){
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }else if(id == R.id.signoutItem){
+            auth.signOut()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }else if(id == android.R.id.home){
+            val intent = Intent(this, ProvincePlacesActivity::class.java)
+            intent.putExtra("province",province)
+            intent.putExtra("region",region)
+            startActivity(intent)
+            finish()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
 }

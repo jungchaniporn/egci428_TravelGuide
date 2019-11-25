@@ -10,7 +10,7 @@ import com.example.egci428_travelguide.DataModel.Province
 import com.example.egci428_travelguide.DataModel.Region
 import com.google.firebase.database.*
 
-class ProvincePlacesDataSource (provinceInName: String, listView: ListView, context: Context){
+class ProvincePlacesDataSource (provinceInName: String, regionInName: String, listView: ListView, context: Context){
     val dataReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("province/$provinceInName/place")
     lateinit var placesList:ArrayList<Place>
     init{
@@ -38,7 +38,7 @@ class ProvincePlacesDataSource (provinceInName: String, listView: ListView, cont
                 placesList = tmp
                 //val regionReceived = getRegion(provinceInName)
                 println("Places images "+placesList.get(0).placeInfo.images.size)
-                val arrayAdapter = ProvincePlacesAdapter(context, placesList, provinceInName)
+                val arrayAdapter = ProvincePlacesAdapter(context, placesList, provinceInName, regionInName)
                 listView.setAdapter(arrayAdapter)
                 println("Done set adapter")
             }

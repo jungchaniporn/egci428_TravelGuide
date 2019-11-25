@@ -1,5 +1,6 @@
 package com.example.egci428_travelguide.Adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.listview_province.view.*
 import kotlinx.android.synthetic.main.listview_provinceplace.view.*
 
-class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>, var provinceInName: String): BaseAdapter(){
+class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>, var provinceInName: String, var regionInName: String): BaseAdapter(){
     private var listData: ArrayList<Place> = objects
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
@@ -67,8 +68,11 @@ class ProvincePlacesAdapter (var context: Context, var objects: ArrayList<Place>
             //pass province name amnd place name to next page
             intent.putExtra("province", provinceInName);
             intent.putExtra("place", place.name);
+            intent.putExtra("region", regionInName);
             //start next page
             context.startActivity(intent)
+            val activity = context as Activity
+            activity.finish()
         }
         return view
     }

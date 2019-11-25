@@ -1,8 +1,7 @@
 package com.example.egci428_travelguide
 
 import android.Manifest
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,9 +9,9 @@ import android.hardware.fingerprint.FingerprintManager
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException
@@ -21,52 +20,15 @@ import javax.crypto.KeyGenerator
 import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
 
-
-class SigninActivity : AppCompatActivity() {
-    private lateinit var fingerprintManager: FingerprintManager
-    private lateinit var keyguardManager: KeyguardManager
-    private val KEY_NAME = "my_key"
-    private var keyStore:KeyStore? = null
-    private var keyGenerator:KeyGenerator? = null
-    private lateinit var cipher: Cipher
-    private lateinit var cryptoObject: FingerprintManager.CryptoObject
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signin)
-        val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
-                as KeyguardManager
-        val fingerprintmng = getSystemService(Context.FINGERPRINT_SERVICE)
-                as FingerprintManager
-        val fingerprintauth = FingerprintAuth(this, keyguardmng, fingerprintmng)
-        if (fingerprintauth.checkLockScreen()) {
-            fingerprintauth.generateKey()
-            if (fingerprintauth.initCipher()) {
-                fingerprintauth.cipher.let {
-                    fingerprintauth.cryptoObject = FingerprintManager.CryptoObject(it)
-                }
-                val helper = FingerprintHelper(this)
-                if (fingerprintauth.fingerprintManager != null && fingerprintauth.cryptoObject != null) {
-                    helper.startAuth(fingerprintauth.fingerprintManager, fingerprintauth.cryptoObject)
-                }
-            }
-        }
-//        if (checkLockScreen()) {
-//            generateKey()
-//            if (initCipher()) {
-//                cipher.let {
-//                    cryptoObject = FingerprintManager.CryptoObject(it)
-//                }
-//                val helper = FingerprintHelper(this)
-//                if (fingerprintManager != null && cryptoObject != null) {
-//                    helper.startAuth(fingerprintManager, cryptoObject)
-//                }
-//            }
-//        }
-
-    }
-
-    private fun initCipher(): Boolean {
+class FingerprintAuth (private val context: Context, keyguardmng: KeyguardManager, fingerprintmng: FingerprintManager){
+    var fingerprintManager: FingerprintManager = fingerprintmng
+    var keyguardManager: KeyguardManager = keyguardmng
+    val KEY_NAME = "my_key"
+    var keyStore:KeyStore? = null
+    var keyGenerator:KeyGenerator? = null
+    lateinit var cipher: Cipher
+    lateinit var cryptoObject: FingerprintManager.CryptoObject
+    fun initCipher(): Boolean {
         try {
             cipher = Cipher.getInstance(
                 KeyProperties.KEY_ALGORITHM_AES + "/"
@@ -99,7 +61,7 @@ class SigninActivity : AppCompatActivity() {
             throw RuntimeException("Failed to init Cipher", e)
         }
     }
-    private fun generateKey() {
+    fun generateKey() {
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore")
         } catch (e: Exception) {
@@ -139,20 +101,20 @@ class SigninActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkLockScreen(): Boolean {
-        keyguardManager = getSystemService(Context.KEYGUARD_SERVICE)
-                as KeyguardManager
-        fingerprintManager = getSystemService(Context.FINGERPRINT_SERVICE)
-                as FingerprintManager
+     fun checkLockScreen(): Boolean {
+//        keyguardManager = getSystemService(Context.KEYGUARD_SERVICE)
+//                as KeyguardManager
+//        fingerprintManager = getSystemService(Context.FINGERPRINT_SERVICE)
+//                as FingerprintManager
         //some other task
         if (keyguardManager.isKeyguardSecure == false) {
 
-            Toast.makeText(this, "Lock screen security not enabled", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Lock screen security not enabled", Toast.LENGTH_LONG).show()
             return false
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context,
                 "Permission not enabled (Fingerprint)",
                 Toast.LENGTH_LONG).show()
 
@@ -160,7 +122,7 @@ class SigninActivity : AppCompatActivity() {
         }
 
         if (fingerprintManager.hasEnrolledFingerprints() == false) {
-            Toast.makeText(this,
+            Toast.makeText(context,
                 "No fingerprint registered, please register",
                 Toast.LENGTH_LONG).show()
             return false

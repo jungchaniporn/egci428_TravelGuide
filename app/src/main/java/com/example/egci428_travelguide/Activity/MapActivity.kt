@@ -1,6 +1,9 @@
 package com.example.egci428_travelguide.Activity
 
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.Intent
+import android.hardware.fingerprint.FingerprintManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -8,17 +11,15 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.egci428_travelguide.*
 import com.google.firebase.auth.FirebaseAuth
 import com.example.egci428_travelguide.Activity.ProvinceListActivity
 import com.example.egci428_travelguide.DataSource.RegionDataSource
-import com.example.egci428_travelguide.ProfileActivity
-import com.example.egci428_travelguide.R
-import com.example.egci428_travelguide.SigninActivity
 import kotlinx.android.synthetic.main.activity_map.*
 
 class MapActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-
+    var i = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -44,42 +45,42 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "North");
             startActivity(intent)
-            //finish()
+            finish()
         }
         centralRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "Central is clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "Central");
             startActivity(intent)
-            //finish()
+            finish()
         }
         northeastRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "Northeast is clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "Northeast");
             startActivity(intent)
-            //finish()
+            finish()
         }
         westRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "West is clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "West");
             startActivity(intent)
-            //finish()
+            finish()
         }
         eastRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "East is clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "East");
             startActivity(intent)
-            //finish()
+            finish()
         }
         southRegion.setOnClickListener {
             Toast.makeText(this@MapActivity, "South is clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MapActivity, ProvinceListActivity::class.java)
             intent.putExtra("region", "South");
             startActivity(intent)
-            //finish()
+            finish()
         }
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -97,15 +98,34 @@ class MapActivity : AppCompatActivity() {
             auth.signOut()
             finish()
         }else if(id == android.R.id.home){
+            auth.signOut()
             finish()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        val intent = Intent(this@MapActivity, SigninActivity::class.java)
-//        startActivity(intent)
-//    }
+    override fun onResume() {
+        super.onResume()
+        if(i!=0){
+        val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
+                as KeyguardManager
+        val fingerprintmng = getSystemService(Context.FINGERPRINT_SERVICE)
+                as FingerprintManager
+        val fingerprintauth = FingerprintAuth(this, keyguardmng, fingerprintmng)
+        if (fingerprintauth.checkLockScreen()) {
+            fingerprintauth.generateKey()
+            if (fingerprintauth.initCipher()) {
+                fingerprintauth.cipher.let {
+                    fingerprintauth.cryptoObject = FingerprintManager.CryptoObject(it)
+                }
+                val helper = FingerprintHelper(this)
+                if (fingerprintauth.fingerprintManager != null && fingerprintauth.cryptoObject != null) {
+                    helper.startAuth(fingerprintauth.fingerprintManager, fingerprintauth.cryptoObject)
+                }
+            }
+        }
+        }
+        i++
+    }
 }

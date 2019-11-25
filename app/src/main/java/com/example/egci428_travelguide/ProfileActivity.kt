@@ -1,8 +1,10 @@
 package com.example.egci428_travelguide
 
 import android.app.Activity
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
+import android.hardware.fingerprint.FingerprintManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -40,7 +42,7 @@ class ProfileActivity : AppCompatActivity() {
     var imgRef:String? = null
     private val PICK_REQUEST = 1111
     private var filePath: Uri? =null
-
+    var i = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -193,6 +195,29 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+    override fun onResume() {
+        super.onResume()
+        if(i!=0){
+            val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
+                    as KeyguardManager
+            val fingerprintmng = getSystemService(Context.FINGERPRINT_SERVICE)
+                    as FingerprintManager
+            val fingerprintauth = FingerprintAuth(this, keyguardmng, fingerprintmng)
+            if (fingerprintauth.checkLockScreen()) {
+                fingerprintauth.generateKey()
+                if (fingerprintauth.initCipher()) {
+                    fingerprintauth.cipher.let {
+                        fingerprintauth.cryptoObject = FingerprintManager.CryptoObject(it)
+                    }
+                    val helper = FingerprintHelper(this)
+                    if (fingerprintauth.fingerprintManager != null && fingerprintauth.cryptoObject != null) {
+                        helper.startAuth(fingerprintauth.fingerprintManager, fingerprintauth.cryptoObject)
+                    }
+                }
+            }
+        }
+        i++
     }
 
 }
