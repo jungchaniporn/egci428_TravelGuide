@@ -35,7 +35,11 @@ class MainActivity : AppCompatActivity() {
         signinBtn.setOnClickListener {
             var email = InEmailText.text.toString()
             var password = InPasswordText.text.toString()
-            signIn(email,password)
+            if(email!=""&&password!="")
+                signIn(email,password)
+            else
+                Toast.makeText(baseContext, "E-mail and password are required.",
+                    Toast.LENGTH_SHORT).show()
         }
     }
 
