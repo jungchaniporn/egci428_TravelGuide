@@ -42,7 +42,6 @@ class SigninActivity : AppCompatActivity() {
                     cryptoObject = FingerprintManager.CryptoObject(it)
                 }
                 val helper = FingerprintHelper(this)
-
                 if (fingerprintManager != null && cryptoObject != null) {
                     helper.startAuth(fingerprintManager, cryptoObject)
                 }
@@ -50,6 +49,7 @@ class SigninActivity : AppCompatActivity() {
         }
 
     }
+
     private fun initCipher(): Boolean {
         try {
             cipher = Cipher.getInstance(

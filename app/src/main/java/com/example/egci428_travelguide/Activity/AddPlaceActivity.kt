@@ -70,6 +70,7 @@ class AddPlaceActivity : AppCompatActivity() {
                     province = data.getString("province")!!
                 }
                 "placeInfo" -> {
+                    textView6.setText("Edit Place")
                     Log.d("add", "from PlaceInfo")
                     province = data.getString("province")!!
                     place = data.getString("place")!!
@@ -144,6 +145,7 @@ class AddPlaceActivity : AppCompatActivity() {
             val id = UUID.randomUUID().toString()
             var imageRef_camera:StorageReference? = null
             if(from == "placeInfo"){
+                println("Index: "+j)
                 imageRef_camera = storageReference!!.child(placeData.images[j])
             }else{
                 imageRef_camera = storageReference!!.child("province/$province/$name/$id")
@@ -199,6 +201,7 @@ class AddPlaceActivity : AppCompatActivity() {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
                 imgView[i].setImageBitmap(bitmap)
+                imgBitmap.removeAt(0)
                 imgBitmap.add(bitmap!!)
                 i++
                 if (i==3){
@@ -213,6 +216,7 @@ class AddPlaceActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
             imgView[i].setImageBitmap(imageBitmap)
+            imgBitmap.removeAt(0)
             imgBitmap.add(imageBitmap!!)
             i++
             if (i==3){

@@ -2,11 +2,14 @@ package com.example.egci428_travelguide
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.fingerprint.FingerprintManager
 import android.os.CancellationSignal
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.startActivity
+import com.example.egci428_travelguide.Activity.MapActivity
 
 class FingerprintHelper(private val appContext: Context) : FingerprintManager.AuthenticationCallback() {
 
@@ -48,8 +51,7 @@ class FingerprintHelper(private val appContext: Context) : FingerprintManager.Au
     override fun onAuthenticationSucceeded(
         result: FingerprintManager.AuthenticationResult) {
 
-        Toast.makeText(appContext,
-            "Authentication succeeded.",
-            Toast.LENGTH_LONG).show()
+        Toast.makeText(appContext, "Authentication succeeded.", Toast.LENGTH_LONG).show()
+
     }
 }

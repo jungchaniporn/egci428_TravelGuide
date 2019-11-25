@@ -13,6 +13,7 @@ import com.example.egci428_travelguide.Activity.ProvinceListActivity
 import com.example.egci428_travelguide.DataSource.RegionDataSource
 import com.example.egci428_travelguide.ProfileActivity
 import com.example.egci428_travelguide.R
+import com.example.egci428_travelguide.SigninActivity
 import kotlinx.android.synthetic.main.activity_map.*
 
 class MapActivity : AppCompatActivity() {
@@ -101,4 +102,10 @@ class MapActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val intent = Intent(this@MapActivity, SigninActivity::class.java)
+//        startActivity(intent)
+//    }
 }
