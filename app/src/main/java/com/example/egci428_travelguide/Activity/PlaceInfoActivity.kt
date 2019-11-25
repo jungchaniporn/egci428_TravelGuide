@@ -191,8 +191,8 @@ class PlaceInfoActivity : AppCompatActivity() {
 
                 }
             }
-            carouselView.setPageCount(data.images.size);
-            carouselView.setImageListener(imageListener);
+            carouselView.setPageCount(data.images.size)
+            carouselView.setImageListener(imageListener)
         }else{
             //in case no image, don't show carousel
             carouselView.visibility = View.GONE

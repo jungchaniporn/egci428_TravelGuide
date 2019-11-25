@@ -84,8 +84,8 @@ class AddPlaceActivity : AppCompatActivity() {
                     infoText.setText(placeData!!.placeInfo)
                     addressText.setText(placeData!!.address)
                     contactText.setText(placeData!!.tel)
-
-                    for (n in 0..2){
+                    var imgSize = placeData.images.size-1
+                    for (n in 0..imgSize){
                         storageReference!!.child(placeData.images.get(n))
                             .downloadUrl.addOnSuccessListener {
                             Picasso
@@ -93,8 +93,11 @@ class AddPlaceActivity : AppCompatActivity() {
                                 .load(it)
                                 .into(imgView[n])
 //                            var temp = Bitmap.createBitmap(imgView[n].getWidth(), imgView[n].getHeight(), Bitmap.Config.RGB_565)
-                            var temp = imgView[n].getDrawable().toBitmap()
-                            imgBitmap.add(temp)
+                            if(imgView[n].getDrawable()!=null){
+                                var temp = imgView[n].getDrawable().toBitmap()
+                                imgBitmap.add(temp)
+                            }
+
                         }.addOnFailureListener {
                             // Handle any errors
                             println("Set image unsuccessful")
@@ -107,7 +110,6 @@ class AddPlaceActivity : AppCompatActivity() {
         }
         // Initialize Firebase DB
         database = FirebaseDatabase.getInstance().getReference("province/$province/place")
-
 
         importImgBtn.setOnClickListener {
             showFileChooser()
@@ -132,8 +134,9 @@ class AddPlaceActivity : AppCompatActivity() {
         var info = infoText.text.toString()
         var address = addressText.text.toString()
         var contract = contactText.text.toString()
-
-        for (j in 0..2){
+        var bitmapSize = imgBitmap.size-1
+        if(bitmapSize > 0){
+        for (j in 0..bitmapSize){
             val baos = ByteArrayOutputStream()
             imgBitmap[j].compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
@@ -161,7 +164,7 @@ class AddPlaceActivity : AppCompatActivity() {
             }else{
                 database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
             }
-
+        }
         }
 
         database.child("$name/info/address").setValue(address)
@@ -191,8 +194,7 @@ class AddPlaceActivity : AppCompatActivity() {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
                 imgView[i].setImageBitmap(bitmap)
-                if(imgBitmap.size == 0) { imgBitmap.add(bitmap!!) }
-                else{ imgBitmap[i] = bitmap}
+                imgBitmap.add(bitmap!!)
                 i++
                 if (i==3){
                     i = 0
@@ -206,8 +208,7 @@ class AddPlaceActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
             imgView[i].setImageBitmap(imageBitmap)
-            if(imgBitmap.size == 0) { imgBitmap.add(imageBitmap!!) }
-            else{ imgBitmap[i] = imageBitmap!!}
+            imgBitmap.add(imageBitmap!!)
             i++
             if (i==3){
                 i = 0
