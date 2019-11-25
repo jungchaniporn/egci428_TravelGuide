@@ -76,6 +76,9 @@ class ProvincePlacesActivity : AppCompatActivity() {
         val id = item.getItemId()
         if(id == R.id.profileItem){
             val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("parent","Place")
+            intent.putExtra("province",province)
+            intent.putExtra("region",region)
             startActivity(intent)
         }else if(id == R.id.signoutItem){
             auth.signOut()

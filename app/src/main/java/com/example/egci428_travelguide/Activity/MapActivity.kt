@@ -93,6 +93,7 @@ class MapActivity : AppCompatActivity() {
         val id = item.getItemId()
         if(id == R.id.profileItem){
             val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("parent","Map")
             startActivity(intent)
         }else if(id == R.id.signoutItem){
             auth.signOut()

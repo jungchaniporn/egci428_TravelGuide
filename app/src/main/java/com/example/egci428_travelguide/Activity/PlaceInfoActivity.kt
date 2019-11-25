@@ -244,6 +244,10 @@ class PlaceInfoActivity : AppCompatActivity() {
         val id = item.getItemId()
         if(id == R.id.profileItem){
             val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("parent","PlaceInfo")
+            intent.putExtra("province",province)
+            intent.putExtra("region",region)
+            intent.putExtra("place",place)
             startActivity(intent)
         }else if(id == R.id.signoutItem){
             auth.signOut()

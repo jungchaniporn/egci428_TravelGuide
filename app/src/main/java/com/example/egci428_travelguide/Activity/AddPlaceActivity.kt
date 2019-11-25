@@ -124,12 +124,14 @@ class AddPlaceActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().getReference("province/$province/place")
 
         importImgBtn.setOnClickListener {
+            ii = 0
             showFileChooser()
         }
         submitBtn.setOnClickListener {
             savePlace()
         }
         CameraBtn.setOnClickListener {
+            ii = 0
             dispatchTakePictureIntent()
         }
     }
@@ -212,7 +214,7 @@ class AddPlaceActivity : AppCompatActivity() {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
                 imgView[i].setImageBitmap(bitmap)
-                imgBitmap.removeAt(0)
+                if (imgBitmap.size > 0) imgBitmap.removeAt(0)
                 imgBitmap.add(bitmap!!)
                 i++
                 if (i==3){
@@ -227,7 +229,7 @@ class AddPlaceActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
             imgView[i].setImageBitmap(imageBitmap)
-            imgBitmap.removeAt(0)
+            if (imgBitmap.size > 0) imgBitmap.removeAt(0)
             imgBitmap.add(imageBitmap!!)
             i++
             if (i==3){
@@ -268,6 +270,16 @@ class AddPlaceActivity : AppCompatActivity() {
         val id = item.getItemId()
         if(id == R.id.profileItem){
             val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("parent","AddEdit")
+            intent.putExtra("province",province)
+            intent.putExtra("region",region)
+            intent.putExtra("place",place)
+            intent.putExtra("from",from)
+            intent.putExtra("address",placeData.address)
+            intent.putExtra("placeInfo",placeData.placeInfo)
+            intent.putExtra("tel",placeData.tel)
+            intent.putExtra("images",placeData.images)
+            intent.putExtra("uid",placeData.uid)
             startActivity(intent)
         }else if(id == R.id.signoutItem){
             auth.signOut()

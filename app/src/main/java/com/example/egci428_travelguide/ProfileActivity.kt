@@ -22,6 +22,10 @@ import com.bumptech.glide.Glide
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
+import com.example.egci428_travelguide.Activity.*
+import com.example.egci428_travelguide.DataModel.PlaceInfo
+import com.example.egci428_travelguide.DataSource.RegionDataSource
+import kotlinx.android.synthetic.main.activity_province_list.*
 import java.io.IOException
 
 
@@ -43,13 +47,48 @@ class ProfileActivity : AppCompatActivity() {
     private val PICK_REQUEST = 1111
     private var filePath: Uri? =null
     var i = 0
-
+    var parent = ""
+    var region = ""
+    var province = ""
+    var place = ""
+    var from = ""
+    var placeData =  PlaceInfo("","","","",ArrayList<String>())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
         // action bar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val data = intent.extras
+        if(data!=null){
+            parent = data.getString("parent")!!
+            when(parent){
+                "List"-> {
+                    region = data.getString("region")!!
+                }
+                "Place"->{
+                    region = data.getString("region")!!
+                    province = data.getString("province")!!
+                }
+                "PlaceInfo"->{
+                    region = data.getString("region")!!
+                    province = data.getString("province")!!
+                    place = data.getString("place")!!
+                }
+                "AddEdit"->{
+                    region = data.getString("region")!!
+                    province = data.getString("province")!!
+                    place = data.getString("place")!!
+                    from = data.getString("from")!!
+                    placeData!!.address = data.getString("address")!!
+                    placeData!!.placeInfo = data.getString("placeInfo")!!
+                    placeData!!.tel = data.getString("tel")!!
+                    placeData!!.images = data.getStringArrayList("images")!!
+                    placeData!!.uid = data.getString("uid")!!
+                }
+            }
+
+        }
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
         // Initialize Firebase Storage
@@ -71,6 +110,7 @@ class ProfileActivity : AppCompatActivity() {
             Ed_save!!.setEnabled(true)
         }
         imgBtn.setOnClickListener {
+            i = 0
             showFileChooser()
         }
         saveBtn.setOnClickListener {
@@ -190,7 +230,43 @@ class ProfileActivity : AppCompatActivity() {
             auth.signOut()
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
+            finish()
         }else if(id == android.R.id.home){
+            var intent:Intent? = null
+            when(parent){
+                "Map"-> {
+                    intent = Intent(this,MapActivity::class.java)
+                }
+                "List"-> {
+                    intent = Intent(this,ProvinceListActivity::class.java)
+                    intent.putExtra("region",region)
+                }
+                "Place"->{
+                    intent = Intent(this,ProvincePlacesActivity::class.java)
+                    intent.putExtra("region",region)
+                    intent.putExtra("province",province)
+                }
+                "PlaceInfo"->{
+                    intent = Intent(this,PlaceInfoActivity::class.java)
+                    intent.putExtra("region",region)
+                    intent.putExtra("province",province)
+                    intent.putExtra("place",place)
+                }
+                "AddEdit"->{
+                    intent = Intent(this,AddPlaceActivity::class.java)
+                    intent.putExtra("from",from)
+                    intent.putExtra("region",region)
+                    intent.putExtra("province",province)
+                    intent.putExtra("place",place)
+                    intent.putExtra("address",placeData.address)
+                    intent.putExtra("placeInfo",placeData.placeInfo)
+                    intent.putExtra("tel",placeData.tel)
+                    intent.putExtra("images",placeData.images)
+                    intent.putExtra("uid",placeData.uid)
+                }
+
+            }
+            startActivity(intent)
             finish()
         }
 
