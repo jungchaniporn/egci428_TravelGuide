@@ -49,8 +49,27 @@ class SignupActivity : AppCompatActivity() {
         submitSigupBtn.setOnClickListener {
             var email = emailText.text.toString()
             var password = passwordText.text.toString()
+            var uname = usernameText.text.toString()
+            if(email!="" && password!="" && password.length>=8 && uname!="")
+                createAccount(email,password)
+            else{
+                if(email=="" && password=="" && uname=="")
+                    Toast.makeText(baseContext, "Please enter e-mail, password, and username.",
+                        Toast.LENGTH_SHORT).show()
+                else if(email=="")
+                    Toast.makeText(baseContext, "Please enter an e-mail",
+                        Toast.LENGTH_SHORT).show()
+                else if(password=="")
+                    Toast.makeText(baseContext, "Please enter a password",
+                        Toast.LENGTH_SHORT).show()
+                else if(password.length<8)
+                    Toast.makeText(baseContext, "Password need to be 8 characters or longer",
+                        Toast.LENGTH_SHORT).show()
+                else if(uname=="")
+                    Toast.makeText(baseContext, "Please enter a username",
+                        Toast.LENGTH_SHORT).show()
+            }
 
-            createAccount(email,password)
 
         }
     }

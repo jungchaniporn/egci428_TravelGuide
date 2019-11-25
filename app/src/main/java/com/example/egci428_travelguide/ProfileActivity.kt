@@ -72,7 +72,11 @@ class ProfileActivity : AppCompatActivity() {
             showFileChooser()
         }
         saveBtn.setOnClickListener {
-            UpdateUser(uNameText.text.toString())
+            if(uNameText.text.toString()!="")
+                UpdateUser(uNameText.text.toString())
+            else
+                Toast.makeText(baseContext, "Username is required.",
+                    Toast.LENGTH_SHORT).show()
         }
 
     }

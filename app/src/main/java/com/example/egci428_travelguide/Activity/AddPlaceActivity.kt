@@ -132,50 +132,55 @@ class AddPlaceActivity : AppCompatActivity() {
         var info = infoText.text.toString()
         var address = addressText.text.toString()
         var contract = contactText.text.toString()
+        if(name!="" && info!="" && address!=""&&contract!=""){
+            for (j in 0..2){
+                val baos = ByteArrayOutputStream()
+                imgBitmap[j].compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
+                val id = UUID.randomUUID().toString()
+                var imageRef_camera:StorageReference? = null
+                if(from == "placeInfo"){
+                    imageRef_camera = storageReference!!.child(placeData.images[j])
+                }else{
+                    imageRef_camera = storageReference!!.child("province/$province/$name/$id")
+                }
+                imageRef_camera.putBytes(data)
+                    .addOnSuccessListener {
+                        Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener{
+                        Toast.makeText(applicationContext, "Failed", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnProgressListener { taskSnapshot ->
+                        val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
+                        Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
+                    }
+                if(from == "placeInfo"){
+                    database.child("$name/info/images/$j").setValue(placeData.images[j])
 
-        for (j in 0..2){
-            val baos = ByteArrayOutputStream()
-            imgBitmap[j].compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val data = baos.toByteArray()
-            val id = UUID.randomUUID().toString()
-            var imageRef_camera:StorageReference? = null
-            if(from == "placeInfo"){
-                imageRef_camera = storageReference!!.child(placeData.images[j])
-            }else{
-                imageRef_camera = storageReference!!.child("province/$province/$name/$id")
+                }else{
+                    database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
+                }
+
             }
-            imageRef_camera.putBytes(data)
-                .addOnSuccessListener {
-                    Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener{
-                    Toast.makeText(applicationContext, "Failed", Toast.LENGTH_SHORT).show()
-                }
-                .addOnProgressListener { taskSnapshot ->
-                    val progress = 100.0 * taskSnapshot.bytesTransferred/taskSnapshot.totalByteCount
-                    Toast.makeText(applicationContext, "Uploaded camera "+progress.toInt()+"%..",Toast.LENGTH_SHORT).show()
-                }
-            if(from == "placeInfo"){
-                database.child("$name/info/images/$j").setValue(placeData.images[j])
 
-            }else{
-                database.child("$name/info/images/$j").setValue("province/$province/$name/$id")
-            }
+            database.child("$name/info/address").setValue(address)
+            database.child("$name/info/placeInfo").setValue(info)
+            database.child("$name/info/tel").setValue(contract)
+            database.child("$name/info/uid").setValue(uid)
 
+            placeNameText.setText("")
+            infoText.setText("")
+            addressText.setText("")
+            contactText.setText("")
+            addPlaceImg1.setImageBitmap(null)
+            addPlaceImg2.setImageBitmap(null)
+            addPlaceImg3.setImageBitmap(null)
+        }else{
+            Toast.makeText(baseContext, "All field except the image are required",
+                Toast.LENGTH_SHORT).show()
         }
 
-        database.child("$name/info/address").setValue(address)
-        database.child("$name/info/placeInfo").setValue(info)
-        database.child("$name/info/tel").setValue(contract)
-        database.child("$name/info/uid").setValue(uid)
-
-        placeNameText.setText("")
-        infoText.setText("")
-        addressText.setText("")
-        contactText.setText("")
-        addPlaceImg1.setImageBitmap(null)
-        addPlaceImg2.setImageBitmap(null)
-        addPlaceImg3.setImageBitmap(null)
     }
     private fun showFileChooser() {
         val intent = Intent()
