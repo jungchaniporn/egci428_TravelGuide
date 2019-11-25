@@ -191,7 +191,8 @@ class AddPlaceActivity : AppCompatActivity() {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
                 imgView[i].setImageBitmap(bitmap)
-                imgBitmap.add(bitmap!!)
+                if(imgBitmap.size == 0) { imgBitmap.add(bitmap!!) }
+                else{ imgBitmap[i] = bitmap}
                 i++
                 if (i==3){
                     i = 0
@@ -205,7 +206,8 @@ class AddPlaceActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = data!!.extras!!.get("data") as Bitmap
             imgView[i].setImageBitmap(imageBitmap)
-            imgBitmap.add(imageBitmap!!)
+            if(imgBitmap.size == 0) { imgBitmap.add(imageBitmap!!) }
+            else{ imgBitmap[i] = imageBitmap!!}
             i++
             if (i==3){
                 i = 0
