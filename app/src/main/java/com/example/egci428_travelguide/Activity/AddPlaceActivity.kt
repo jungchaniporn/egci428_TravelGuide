@@ -210,6 +210,11 @@ class AddPlaceActivity : AppCompatActivity() {
             addPlaceImg1.setImageBitmap(null)
             addPlaceImg2.setImageBitmap(null)
             addPlaceImg3.setImageBitmap(null)
+            //redirect to previous page\
+            val intent = Intent(this@AddPlaceActivity, ProvincePlacesActivity::class.java)
+            intent.putExtra("province",province)
+            intent.putExtra("region",region)
+            startActivity(intent)
         }else{
             Toast.makeText(baseContext, "All field except the image are required", Toast.LENGTH_SHORT).show()
         }
