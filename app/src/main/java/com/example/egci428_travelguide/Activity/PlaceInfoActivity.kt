@@ -91,6 +91,11 @@ class PlaceInfoActivity : AppCompatActivity() {
                                         "Post deleted",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    //redirect to place list of province page
+                                    val intent = Intent(this@PlaceInfoActivity, ProvincePlacesActivity::class.java)
+                                    intent.putExtra("province",province)
+                                    intent.putExtra("region",region)
+                                    startActivity(intent)
                                     finish()
                                     println("delete donnnnneeeeee")
                                 }
