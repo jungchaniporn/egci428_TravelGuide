@@ -25,6 +25,8 @@ class ProvinceListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_province_list)
         // action bar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
         val data = intent.extras
         if(data!=null){
             region = data.getString("region")!!
