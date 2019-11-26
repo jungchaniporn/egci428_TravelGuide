@@ -23,11 +23,7 @@ class MainActivity : AppCompatActivity() {
         button.paintFlags = button.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
-
-        fingerprintBtn.setOnClickListener {
-            val intent = Intent(this,SigninActivity::class.java)
-            startActivity(intent)
-        }
+        // Link to sign up page
         signupBtn.setOnClickListener {
             val intent = Intent(this,SignupActivity::class.java)
             startActivity(intent)
@@ -54,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     val user = auth.currentUser
                     InEmailText.setText("")
                     InPasswordText.setText("")
-                    //val intent = Intent(this,ProfileActivity::class.java)
+                    // Link to main Map page once successfully authenticate the user
                     val intent = Intent(this, MapActivity::class.java)
                     startActivity(intent)
                 } else {

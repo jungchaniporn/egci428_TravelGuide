@@ -45,7 +45,7 @@ class FingerprintHelper(private val appContext: Context) : FingerprintManager.Au
         Toast.makeText(appContext,
             "Authentication error\n" + errString,
             Toast.LENGTH_LONG).show()
-//        val activity = MapActivity::finishActivity
+        // if user fail authentication (may cancle or not the owner), need to sign in again
         val activity = appContext as Activity
         activity.finish()
     }

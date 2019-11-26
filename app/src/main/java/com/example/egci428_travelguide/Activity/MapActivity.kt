@@ -95,6 +95,7 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             intent.putExtra("parent","Map")
             startActivity(intent)
+            finish()
         }else if(id == R.id.signoutItem){
             auth.signOut()
             finish()
@@ -107,6 +108,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        // once user leaves the page and comeback, the app will require fingerprint authentication
         super.onResume()
         if(i!=0){
         val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)

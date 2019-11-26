@@ -37,6 +37,7 @@ class ProvinceListActivity : AppCompatActivity() {
         regionName.setText(region)
     }
     override fun onResume() {
+        // once user leaves the page and comeback, the app will require fingerprint authentication
         super.onResume()
         if(i!=0){
             val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
@@ -72,6 +73,7 @@ class ProvinceListActivity : AppCompatActivity() {
             intent.putExtra("parent","List")
             intent.putExtra("region", region)
             startActivity(intent)
+            finish()
         }else if(id == R.id.signoutItem){
             auth.signOut()
             val intent = Intent(this, MainActivity::class.java)

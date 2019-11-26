@@ -32,7 +32,7 @@ class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-        // back button
+        // Show Back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Initialize Firebase Auth
@@ -42,7 +42,7 @@ class SignupActivity : AppCompatActivity() {
         // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance()
         storageReference = storage!!.reference
-
+        // Show photo gallery from the phone
         importPhotoBtn.setOnClickListener {
             showFileChooser()
         }
@@ -129,11 +129,11 @@ class SignupActivity : AppCompatActivity() {
                     passwordText.setText("")
                     imageView.setImageBitmap(null)
                 }
-            database.child(user!!.uid+"/filePath").setValue(filePath.toString()) //set username
+            database.child(user!!.uid+"/filePath").setValue(filePath.toString()) //set file path referent to storage
                 .addOnCompleteListener {
                     Toast.makeText(applicationContext, "File path saved successfully", Toast.LENGTH_SHORT).show()
                 }
-            database.child(user!!.uid+"/imageRef").setValue("Users/"+user!!.uid+"/profileImg/"+id) //set username
+            database.child(user!!.uid+"/imageRef").setValue("Users/"+user!!.uid+"/profileImg/"+id) //set file path referent to storage
         }
     }
 

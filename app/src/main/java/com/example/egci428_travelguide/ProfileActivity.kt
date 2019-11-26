@@ -60,8 +60,10 @@ class ProfileActivity : AppCompatActivity() {
         // action bar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val data = intent.extras
+        // retrieve data from other pages
         if(data!=null){
             parent = data.getString("parent")!!
+            //different pages have different variable to retrieve
             when(parent){
                 "List"-> {
                     region = data.getString("region")!!
@@ -94,14 +96,14 @@ class ProfileActivity : AppCompatActivity() {
         // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance()
         storageReference = storage!!.reference
-
+        // get infomation from current user
         val currentUser = auth.currentUser
         Uid = currentUser!!.uid
         updateUI(currentUser)
         loadImage(this)
 
         editBtn.setOnClickListener {
-//            not save data yet, just enable-disable editText
+            //enable editText
             Ed_uName = findViewById(R.id.uNameText)
             Ed_uName!!.setEnabled(true)
             Ed_img = findViewById(R.id.imgBtn)
@@ -110,6 +112,7 @@ class ProfileActivity : AppCompatActivity() {
             Ed_save!!.setEnabled(true)
         }
         imgBtn.setOnClickListener {
+            // prevent fingerprint authentication to check when get back from camera roll
             i = 0
             showFileChooser()
         }
@@ -126,7 +129,7 @@ class ProfileActivity : AppCompatActivity() {
         if (filePath != null){
             Toast.makeText(applicationContext, "Uploading...", Toast.LENGTH_SHORT).show()
             val img = storageReference!!.child(imgRef.toString())
-            // upload file
+            // upload file image to firebase storage
             img.putFile(filePath!!)
                 .addOnSuccessListener {
                     Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
@@ -160,13 +163,14 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
     private fun UpdateUser(username: String) {
-        // update username in DB
+        // update username in database
         database.child("/username").setValue(username)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Updated", Toast.LENGTH_SHORT).show()
             }
         // update img in storage
         uploadFile()
+        //disable editText
         Ed_uName!!.setEnabled(false)
         Ed_img!!.setEnabled(false)
         Ed_save!!.setEnabled(false)
@@ -175,8 +179,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             MailText.setText(user.email)
-            // Initialize Firebase DB
+            // prepare database
             database = FirebaseDatabase.getInstance().getReference("Users/"+Uid)
+            // get infomation from database that referring to
             database.addValueEventListener(object: ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                 }
@@ -201,7 +206,9 @@ class ProfileActivity : AppCompatActivity() {
                 if(p0.exists()){
                     val user_ = p0.getValue(UserInfo::class.java)
                     imgRef = user_!!.imageRef
+                    //get image path refer to storage
                     Log.d("LoadImg",user_!!.imageRef)
+                    // dowload image according to the path from database
                     storageReference!!.child(user_!!.imageRef).downloadUrl.addOnSuccessListener {
                         Log.d("Link",it.toString())
                         Glide.with(context)
@@ -210,22 +217,22 @@ class ProfileActivity : AppCompatActivity() {
 //                        profileImg.setImageURI(it)
                     }.addOnFailureListener {
                         // Handle any errors
+                        Log.d("Error",it.toString())
                     }
                 }
             }
         })
     }
-// for action bar
+    // for action bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.menu_detail,menu)
-
         return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.getItemId()
+        // check the id of button that is clicked
         if(id == R.id.profileItem){
-            val intent = Intent(this,ProfileActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this,"Currently at the profile page",Toast.LENGTH_SHORT).show()
         }else if(id == R.id.signoutItem){
             auth.signOut()
             val intent = Intent(this,MainActivity::class.java)
@@ -233,6 +240,7 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         }else if(id == android.R.id.home){
             var intent:Intent? = null
+            // send back all the information that parent page need which will be different
             when(parent){
                 "Map"-> {
                     intent = Intent(this,MapActivity::class.java)
@@ -273,6 +281,7 @@ class ProfileActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
     override fun onResume() {
+        // once user leaves the page and comeback, the app will require fingerprint authentication
         super.onResume()
         if(i!=0){
             val keyguardmng= getSystemService(Context.KEYGUARD_SERVICE)
