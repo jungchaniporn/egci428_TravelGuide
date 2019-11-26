@@ -232,7 +232,7 @@ class AddPlaceActivity : AppCompatActivity() {
                 // add bitmap images into imageView
                 imgView[i].setImageBitmap(bitmap)
                 // in case of editting, existing image need to be deleted
-                if (imgBitmap.size > 0) imgBitmap.removeAt(0)
+                if (imgBitmap.size > 0 && from == "placeInfo") imgBitmap.removeAt(0)
                 // store bitmap images into array for upload
                 imgBitmap.add(bitmap!!)
                 i++
@@ -252,7 +252,7 @@ class AddPlaceActivity : AppCompatActivity() {
             // add bitmap images into imageView
             imgView[i].setImageBitmap(imageBitmap)
             // in case of editting, existing image need to be deleted
-            if (imgBitmap.size > 0) imgBitmap.removeAt(0)
+            if (imgBitmap.size > 0 && from == "placeInfo") imgBitmap.removeAt(0)
             // store bitmap images into array for upload
             imgBitmap.add(imageBitmap!!)
             i++
