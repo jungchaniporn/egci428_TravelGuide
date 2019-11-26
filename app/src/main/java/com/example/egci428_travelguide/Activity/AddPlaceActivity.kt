@@ -83,7 +83,7 @@ class AddPlaceActivity : AppCompatActivity() {
                 }
                 "placeInfo" -> {
                     // for edit existing place
-                    textView6.setText("Edit Place")
+                    textView6.setText("EDIT PLACE")
                     Log.d("edit", "from PlaceInfo")
                     region = data.getString("region")!!
                     province = data.getString("province")!!
