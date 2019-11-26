@@ -215,6 +215,7 @@ class AddPlaceActivity : AppCompatActivity() {
             intent.putExtra("province",province)
             intent.putExtra("region",region)
             startActivity(intent)
+            finish()
         }else{
             Toast.makeText(baseContext, "All field except the image are required", Toast.LENGTH_SHORT).show()
         }
